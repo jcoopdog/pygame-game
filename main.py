@@ -1,4 +1,4 @@
-import pygame
+import pygame, os
 from player import *
 
 # pygame setup
@@ -7,9 +7,13 @@ screen = pygame.display.set_mode((1280, 720))
 clock = pygame.time.Clock()
 running = True
 dt = 0
+filepath = os.path.dirname(os.path.abspath(__file__))
+os.chdir(filepath)
+assetdir = "assets"
+pygame.display.set_caption("gaem")
 
-player = Player(screen.get_width() / 2, screen.get_height() / 2)
-playerspeed = 3
+player = Player(screen.get_width() / 2, screen.get_height() / 2, os.path.join(assetdir, "player.png"))
+playerspeed = 13
 
 while running:
     # poll for events
@@ -19,7 +23,7 @@ while running:
             running = False
 
     # fill the screen with a color to wipe away anything from last frame
-    screen.fill("black")
+    screen.fill("#282c34")
 
     player.render(screen)
 
@@ -33,10 +37,12 @@ while running:
     if keys[pygame.K_d]:
         player.xvel += playerspeed
     
-    player.move(dt, 0.99)
+    player.check_wall_colisions(screen.get_width(), screen.get_height())
+
+    player.move(dt, 0.95)
 
     # flip() the display to put your work on screen
-    pygame.display.flip()
+    pygame.display.update()
 
     # limits FPS to 60
     # dt is delta time in seconds since last frame, used for framerate-
