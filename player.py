@@ -18,7 +18,7 @@ class Player:
         self.x += self.xvel * dt
         self.y += self.yvel * dt
     
-    def check_wall_colisions(self, width, height):
+    def check_wall(self, width, height):
         if (self.x >= width - self.image.get_width()):
             self.x = width - self.image.get_width()
             self.xvel *= -1
