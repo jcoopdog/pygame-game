@@ -1,16 +1,19 @@
-import pygame, math
+import pygame, math, os
+from settings import *
 
 class Bullet:
-    
-    def __init__(self, startx, starty, speed, angle, imgpath):
+
+    image = pygame.image.load(os.path.join(assetdir, "bullet.png"))
+
+    def __init__(self, startx, starty, angle, speed):
         self.x = startx
         self.y = starty
         self.xvel = speed * math.cos(math.radians(angle))
         self.yvel = speed * math.sin(math.radians(angle))
-        self.image = pygame.transform.rotate(pygame.image.load(imgpath), angle)
+        self.image = pygame.transform.rotate(self.image, -angle)
         self.rect = self.image.get_rect(topleft=(startx, starty))
     
-    def render(self, screen):
+    def draw(self, screen):
         screen.blit(self.image, (self.x, self.y))
 
     def move(self, dt):
@@ -23,4 +26,30 @@ class Bullet:
             return True
         else:
             return False
+
+class BulletController:
+
+    def __init__(self):
+        self.bullets = []
+
+    def clear(self):
+        self.bullets = []
+    
+    def add(self, bullet):
+        self.bullets.append(bullet)
+    
+    def remove(self, bullet):
+        self.bullets.remove(bullet)
+    
+    def update(self, dt, screen):
+        for b in self.bullets:
+            b.move(dt)
+            if b.check_wall(screen.get_width(), screen.get_height()):
+                self.remove(b)
+                continue
+
+    def draw(self, screen):
+        for b in self.bullets:
+            b.draw(screen)
+    
 
