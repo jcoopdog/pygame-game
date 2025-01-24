@@ -8,7 +8,7 @@ class Player:
                "red"   : pygame.image.load("player_red.png") }
     os.chdir("..")
 
-    def __init__(self, startx, starty, speed=13, imgpath=os.path.join(assetdir, "player.png"), damage_cd_max = 1):
+    def __init__(self, startx, starty, speed=23, imgpath=os.path.join(assetdir, "player.png"), damage_cd_max = 1, dash_cd_max = 1, reverse_cd_max = 1):
         self.x = startx
         self.y = starty
         self.xvel = 0
@@ -16,6 +16,10 @@ class Player:
         self.speed = speed
         self.damage_cd = 0
         self.damage_cd_max = damage_cd_max
+        self.dash_cd = 0
+        self.dash_cd_max = dash_cd_max
+        self.reverse_cd = 0
+        self.reverse_cd_max = reverse_cd_max
         self.image = self.images["green"]
         self.rect = self.image.get_rect(topleft=(startx, starty))
     
@@ -23,6 +27,8 @@ class Player:
         screen.blit(self.image, (self.x, self.y))
 
     def update(self, dt, screen, friction=0.95, keys=None):
+        self.reverse_cd -= dt
+        self.dash_cd -= dt
         if keys == None:
             keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
@@ -31,8 +37,19 @@ class Player:
             self.yvel += self.speed
         if keys[pygame.K_a]:
             self.xvel -= self.speed
-        if keys [pygame.K_d]:
+        if keys[pygame.K_d]:
             self.xvel += self.speed
+        if keys[pygame.K_SPACE]:
+            if self.reverse_cd <= 0:
+                self.xvel *= -1.3
+                self.yvel *= -1.3
+                self.reverse_cd = self.reverse_cd_max
+        if keys[pygame.K_LSHIFT]:
+            if self.dash_cd <= 0:
+                self.xvel *= 10   # cmp(self.xvel, 0)
+                self.yvel *= 10   # cmp(self.yvel, 0)
+                self.dash_cd = self.dash_cd_max
+                self.damage_cd = 0.5 if self.damage_cd <= 0 else self.damage_cd + 0.5
         self.xvel *= friction
         self.yvel *= friction
         self.x += self.xvel * dt

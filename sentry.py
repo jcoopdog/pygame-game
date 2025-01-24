@@ -25,7 +25,7 @@ class Sentry:
             return False
         self.cooldown = random.randint(100,300) / 100
         angle = random.randint(0,7) * 45
-        bullet = Bullet(self.rect.centerx, self.rect.centery, angle, 20)
+        bullet = Bullet(self.rect.centerx, self.rect.centery, angle, 40)
         bullets.add(bullet)
         return False
 
