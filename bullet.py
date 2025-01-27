@@ -52,4 +52,13 @@ class BulletController:
         for b in self.bullets:
             b.draw(screen)
     
+class CircleBullet(Bullet):
+    
+    image = pygame.image.load(os.path.join(assetdir, "bullet_circle.png"))
 
+    def __init__(self, startx, starty, angle, speed):
+        self.x = startx
+        self.y = starty
+        self.xvel = speed * math.cos(math.radians(angle))
+        self.yvel = speed * math.sin(math.radians(angle))
+        self.rect = self.image.get_rect(topleft=(startx, starty))

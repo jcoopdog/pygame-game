@@ -1,5 +1,5 @@
 import pygame, os, sys
-from base_classes import *
+from coopergame import *
 
 
 

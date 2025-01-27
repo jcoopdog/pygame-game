@@ -83,7 +83,7 @@ class BaseGame:
             if self.currentState != None:
                 self.currentState.update(dt, self.screen)
                 
-            self.screen.fill(self.bgcolor)	
+            #self.screen.fill(self.bgcolor)	
             if self.currentState != None:
                 self.currentState.draw(self.screen)
                 

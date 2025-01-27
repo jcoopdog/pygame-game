@@ -46,8 +46,8 @@ class Player:
                 self.reverse_cd = self.reverse_cd_max
         if keys[pygame.K_LSHIFT]:
             if self.dash_cd <= 0:
-                self.xvel *= 10   # cmp(self.xvel, 0)
-                self.yvel *= 10   # cmp(self.yvel, 0)
+                self.xvel += 10 * (self.xvel * 0.5)   # cmp(self.xvel, 0)
+                self.yvel += 10 * (self.yvel * 0.5)  # cmp(self.yvel, 0)
                 self.dash_cd = self.dash_cd_max
                 self.damage_cd = 0.5 if self.damage_cd <= 0 else self.damage_cd + 0.5
         self.xvel *= friction
@@ -76,16 +76,9 @@ class Player:
             self.y = 0
             self.yvel *= -1
 
-    def check_projectiles(self, proj, projcon):
+    def damage(self):
         if self.damage_cd > 0:
             return
-        for p in proj:
-            if self.rect.colliderect(p):
-                projcon.remove(p)
-                self.damage()
-                break
-
-    def damage(self):
         self.image = self.images["red"]
         self.xvel += 30 * cmp(self.xvel, 0)
         self.yvel += 30 * cmp(self.yvel, 0)
