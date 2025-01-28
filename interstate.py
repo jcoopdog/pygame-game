@@ -30,19 +30,14 @@ class ToggleState(InterState):
         super().__init__(game, message, message_color, bgcolor, fillbg)
 
         self.key = key
-        self.unpause = False
+        self.toggle = False
 
     def enter(self, prevState):
         self.nextState = prevState
-        self.unpause = False
+        self.toggle = False
 
-    def update(self, dt, screen):
-        keys = pygame.key.get_pressed()
-
-        if keys[self.key]:
-            self.unpause = True
-        elif self.unpause:
-            self.game.changeState(self.nextState)
-            return
-
+    def event(self, event):
+        if event.type == pygame.KEYUP:
+            if event.key == self.key:
+                self.game.changeState(self.nextState)
 

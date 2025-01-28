@@ -5,15 +5,16 @@ class Event:
 
     def __init__(self, wait=1):
         self.wait = wait
+        self.rect = pygame.Rect(-1, -1, 1, 1)
 
     def start(self, game, state):
         self.game = game
         self.state = state
 
-    def update(self, dt) -> bool:
+    def update(self, dt, screen) -> bool:
         return False
     
-    def draw(screen):
+    def draw(self, screen):
         pass
 
 class EventManager:
@@ -35,7 +36,7 @@ class EventManager:
     def add(self, event):
         self.events.append(event)
 
-    def update(self, dt, screen=None):
+    def update(self, dt, screen):
         self.event_wait -= dt
         if self.event_wait <= 0:
             e = self.level[self.event_counter]
@@ -50,7 +51,7 @@ class EventManager:
                 return True
             return False
         for e in self.events:
-            if e.update(dt):
+            if e.update(dt, screen):
                 self.remove(e)
                 continue
     

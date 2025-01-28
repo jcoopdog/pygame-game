@@ -35,6 +35,9 @@ class GameState(object):
     def draw(self, screen):
         pass
         
+    def event(self, event):
+        pass
+
 class BaseGame:
             
     """
@@ -48,21 +51,21 @@ class BaseGame:
         self.clock = pygame.time.Clock()
         self.screen = pygame.display.set_mode((width, height))
         self.bgcolor = pygame.Color(0, 0, 0)
-        self.currentState = None
+        self.state = None
         
     """
     Change the current state. If the newState is 'None' then the game will terminate.
     """
     def changeState(self, newState):
-        if ( self.currentState != None ):
-            self.currentState.exit()
+        if ( self.state != None ):
+            self.state.exit()
             
         if ( newState == None ):
             pygame.quit()
             sys.exit()	
             
-        prevState = self.currentState
-        self.currentState = newState
+        prevState = self.state
+        self.state = newState
         newState.enter(prevState)
 
     """
@@ -77,15 +80,18 @@ class BaseGame:
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
+                    self.state.exit()
                     pygame.quit()
                     sys.exit()	
+                else:
+                    if self.state != None:self.state.event(event)
             
-            if self.currentState != None:
-                self.currentState.update(dt, self.screen)
+            if self.state != None:
+                self.state.update(dt, self.screen)
                 
             #self.screen.fill(self.bgcolor)	
-            if self.currentState != None:
-                self.currentState.draw(self.screen)
+            if self.state != None:
+                self.state.draw(self.screen)
                 
             pygame.display.update()
             dt = self.clock.tick(60) / 1000
